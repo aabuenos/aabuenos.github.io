@@ -82,3 +82,29 @@
     });
   }
 })();
+
+(() => {
+  const section = document.querySelector('#meetings');
+  const open = section?.querySelector('.meeting-photo');
+  const expanded = section?.querySelector('.meeting-photo-expanded');
+  const content = section?.querySelector(':scope > div');
+  if (!open || !expanded || !content) return;
+
+  const close = () => {
+    expanded.hidden = true;
+    content.inert = false;
+    open.setAttribute('aria-expanded', 'false');
+    open.focus({ preventScroll: true });
+  };
+  open.addEventListener('click', () => {
+    content.inert = true;
+    expanded.hidden = false;
+    open.setAttribute('aria-expanded', 'true');
+    section.scrollIntoView({ block: 'start', behavior: 'instant' });
+    expanded.focus({ preventScroll: true });
+  });
+  expanded.addEventListener('click', close);
+  document.addEventListener('keydown', (event) => {
+    if (event.key === 'Escape' && !expanded.hidden) close();
+  });
+})();
